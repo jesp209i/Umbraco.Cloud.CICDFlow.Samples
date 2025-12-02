@@ -14,30 +14,49 @@ on:
       - 'V2/tests/**'
       - '.github/workflows/run-tests.yml'
   workflow_dispatch:
+    inputs:
+      run_powershell:
+        description: 'Run PowerShell tests'
+        type: boolean
+        default: true
+      run_bash:
+        description: 'Run Bash tests'
+        type: boolean
+        default: true
 
 jobs:
   detect-changes:
     name: Detect Changes
     runs-on: ubuntu-latest
     outputs:
-      powershell: ${{ steps.changes.outputs.powershell }}
-      bash: ${{ steps.changes.outputs.bash }}
+      powershell: ${{ steps.set-outputs.outputs.powershell }}
+      bash: ${{ steps.set-outputs.outputs.bash }}
     steps:
       - uses: actions/checkout@v4
 
       - name: Detect file changes
         id: changes
+        if: github.event_name != 'workflow_dispatch'
         uses: dorny/paths-filter@v3
         with:
           filters: |
             powershell:
               - 'V2/powershell/**'
               - 'V2/tests/powershell/**'
-              - '.github/workflows/run-tests.yml'
             bash:
               - 'V2/bash/**'
               - 'V2/tests/bash/**'
-              - '.github/workflows/run-tests.yml'
+
+      - name: Set outputs
+        id: set-outputs
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "powershell=${{ inputs.run_powershell }}" >> $GITHUB_OUTPUT
+            echo "bash=${{ inputs.run_bash }}" >> $GITHUB_OUTPUT
+          else
+            echo "powershell=${{ steps.changes.outputs.powershell }}" >> $GITHUB_OUTPUT
+            echo "bash=${{ steps.changes.outputs.bash }}" >> $GITHUB_OUTPUT
+          fi
 
   powershell-tests:
     name: PowerShell Tests (Pester)
