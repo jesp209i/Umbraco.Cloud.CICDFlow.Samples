@@ -2,7 +2,7 @@
 
 setup() {
     SCRIPT_DIR="$(cd "$(dirname "$BATS_TEST_FILENAME")" && pwd)"
-    SCRIPT_PATH="$SCRIPT_DIR/../../bash/get_deployment_status.sh"
+    SCRIPT_PATH="$SCRIPT_DIR/../../V2/bash/get_deployment_status.sh"
 
     TEST_TEMP_DIR="$(mktemp -d)"
 

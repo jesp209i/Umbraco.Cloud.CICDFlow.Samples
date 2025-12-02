@@ -3,7 +3,7 @@
 setup() {
     # Get the directory of the test file
     SCRIPT_DIR="$(cd "$(dirname "$BATS_TEST_FILENAME")" && pwd)"
-    SCRIPT_PATH="$SCRIPT_DIR/../../bash/get_latest_deployment.sh"
+    SCRIPT_PATH="$SCRIPT_DIR/../../V2/bash/get_latest_deployment.sh"
 
     # Create temp directory for test artifacts
     TEST_TEMP_DIR="$(mktemp -d)"

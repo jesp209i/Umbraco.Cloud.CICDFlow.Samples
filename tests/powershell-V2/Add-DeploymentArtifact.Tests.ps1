@@ -1,5 +1,5 @@
 BeforeAll {
-    $ScriptPath = Join-Path $PSScriptRoot "..\..\powershell\Add-DeploymentArtifact.ps1"
+    $ScriptPath = Join-Path $PSScriptRoot "..\..\V2\powershell\Add-DeploymentArtifact.ps1"
 }
 
 Describe "Add-DeploymentArtifact" {

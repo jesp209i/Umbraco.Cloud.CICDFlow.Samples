@@ -1,5 +1,5 @@
 BeforeAll {
-    $ScriptPath = Join-Path $PSScriptRoot "..\..\powershell\Test-DeploymentStatus.ps1"
+    $ScriptPath = Join-Path $PSScriptRoot "..\..\V2\powershell\Test-DeploymentStatus.ps1"
 }
 
 Describe "Test-DeploymentStatus" {

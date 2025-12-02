@@ -5,13 +5,13 @@ on:
     paths:
       - 'V2/powershell/**'
       - 'V2/bash/**'
-      - 'V2/tests/**'
+      - 'tests/**'
       - '.github/workflows/run-tests.yml'
   pull_request:
     paths:
       - 'V2/powershell/**'
       - 'V2/bash/**'
-      - 'V2/tests/**'
+      - 'tests/**'
       - '.github/workflows/run-tests.yml'
   workflow_dispatch:
     inputs:
@@ -42,10 +42,10 @@ jobs:
           filters: |
             powershell:
               - 'V2/powershell/**'
-              - 'V2/tests/powershell/**'
+              - 'tests/powershell-V2/**'
             bash:
               - 'V2/bash/**'
-              - 'V2/tests/bash/**'
+              - 'tests/bash-V2/**'
 
       - name: Set outputs
         id: set-outputs
@@ -70,7 +70,7 @@ jobs:
         shell: pwsh
         run: |
           $config = New-PesterConfiguration
-          $config.Run.Path = "./V2/tests/powershell"
+          $config.Run.Path = "./tests/powershell-V2"
           $config.Output.Verbosity = "Detailed"
           $config.TestResult.Enabled = $true
           $config.TestResult.OutputPath = "pester-results.xml"
@@ -98,7 +98,7 @@ jobs:
           sudo apt-get install -y bats
 
       - name: Run Bats Tests
-        run: bats V2/tests/bash/ --verbose-run --show-output-of-passing-tests --timing 2>&1 | tee bats-results.tap
+        run: bats tests/bash-V2/ --verbose-run --show-output-of-passing-tests --timing 2>&1 | tee bats-results.tap
 
       - name: Upload Bats Results
         uses: actions/upload-artifact@v4

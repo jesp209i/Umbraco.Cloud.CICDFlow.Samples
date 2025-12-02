@@ -1,5 +1,5 @@
 BeforeAll {
-    $ScriptPath = Join-Path $PSScriptRoot "..\..\powershell\Apply-Patch.ps1"
+    $ScriptPath = Join-Path $PSScriptRoot "..\..\V2\powershell\Apply-Patch.ps1"
 }
 
 Describe "Apply-Patch" {

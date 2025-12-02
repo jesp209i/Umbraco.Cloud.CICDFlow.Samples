@@ -66,34 +66,34 @@ When running Bats on Windows (Git Bash), ensure scripts have Unix line endings (
 ### Run all PowerShell tests
 
 ```powershell
-Invoke-Pester ./V2/tests/powershell -Output Detailed
+Invoke-Pester ./tests/powershell-V2 -Output Detailed
 ```
 
 ### Run a single PowerShell test file
 
 ```powershell
-Invoke-Pester ./V2/tests/powershell/Get-LatestDeployment.Tests.ps1 -Output Detailed
+Invoke-Pester ./tests/powershell-V2/Get-LatestDeployment.Tests.ps1 -Output Detailed
 ```
 
 ### Run all Bash tests
 
 ```bash
-bats V2/tests/bash/
+bats tests/bash-V2/
 ```
 
 ### Run a single Bash test file
 
 ```bash
-bats V2/tests/bash/get_latest_deployment.bats
+bats tests/bash-V2/get_latest_deployment.bats
 ```
 
 ## Test Structure
 
 ```
-V2/tests/
-├── bash/                    # Bats tests for bash scripts
+tests/
+├── bash-V2/                    # Bats tests for bash scripts
 │   └── *.bats
-├── powershell/              # Pester tests for PowerShell scripts
+├── powershell-V2/              # Pester tests for PowerShell scripts
 │   └── *.Tests.ps1
 └── README.md
 ```
@@ -104,10 +104,10 @@ V2/tests/
 
 - Name test files `<ScriptName>.Tests.ps1`
 - Use `Mock Invoke-WebRequest` to simulate API responses
-- Reference scripts using: `Join-Path $PSScriptRoot "..\..\powershell\<ScriptName>.ps1"`
+- Reference scripts using: `Join-Path $PSScriptRoot "..\..\V2\powershell\<ScriptName>.ps1"`
 
 ### Bash (Bats)
 
 - Name test files `<script_name>.bats`
 - Mock `curl` by creating a fake executable in a temp directory and prepending it to `PATH`
-- Reference scripts using: `$SCRIPT_DIR/../../bash/<script_name>.sh`
+- Reference scripts using: `$SCRIPT_DIR/../../V2/bash/<script_name>.sh`

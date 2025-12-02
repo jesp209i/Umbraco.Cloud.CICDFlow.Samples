@@ -2,7 +2,7 @@
 
 setup() {
     SCRIPT_DIR="$(cd "$(dirname "$BATS_TEST_FILENAME")" && pwd)"
-    SCRIPT_PATH="$SCRIPT_DIR/../../bash/apply_patch.sh"
+    SCRIPT_PATH="$SCRIPT_DIR/../../V2/bash/apply_patch.sh"
 
     TEST_TEMP_DIR="$(mktemp -d)"
     export GITHUB_OUTPUT="$TEST_TEMP_DIR/github_output.txt"

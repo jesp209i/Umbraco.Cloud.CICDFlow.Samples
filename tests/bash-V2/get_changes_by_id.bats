@@ -2,7 +2,7 @@
 
 setup() {
     SCRIPT_DIR="$(cd "$(dirname "$BATS_TEST_FILENAME")" && pwd)"
-    SCRIPT_PATH="$SCRIPT_DIR/../../bash/get_changes_by_id.sh"
+    SCRIPT_PATH="$SCRIPT_DIR/../../V2/bash/get_changes_by_id.sh"
 
     TEST_TEMP_DIR="$(mktemp -d)"
     export GITHUB_OUTPUT="$TEST_TEMP_DIR/github_output.txt"

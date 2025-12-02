@@ -1,5 +1,5 @@
 BeforeAll {
-    $ScriptPath = Join-Path $PSScriptRoot "..\..\powershell\Get-LatestDeployment.ps1"
+    $ScriptPath = Join-Path $PSScriptRoot "..\..\V2\powershell\Get-LatestDeployment.ps1"
 }
 
 Describe "Get-LatestDeployment" {

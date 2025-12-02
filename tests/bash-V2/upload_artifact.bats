@@ -2,7 +2,7 @@
 
 setup() {
     SCRIPT_DIR="$(cd "$(dirname "$BATS_TEST_FILENAME")" && pwd)"
-    SCRIPT_PATH="$SCRIPT_DIR/../../bash/upload_artifact.sh"
+    SCRIPT_PATH="$SCRIPT_DIR/../../V2/bash/upload_artifact.sh"
 
     TEST_TEMP_DIR="$(mktemp -d)"
     export GITHUB_OUTPUT="$TEST_TEMP_DIR/github_output.txt"
