@@ -79,7 +79,7 @@ jobs:
           sudo apt-get install -y bats
 
       - name: Run Bats Tests
-        run: bats V2/tests/bash/ --formatter tap > bats-results.tap
+        run: bats V2/tests/bash/ --verbose-run --show-output-of-passing-tests --timing 2>&1 | tee bats-results.tap
 
       - name: Upload Bats Results
         uses: actions/upload-artifact@v4
