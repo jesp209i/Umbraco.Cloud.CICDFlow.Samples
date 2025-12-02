@@ -1,0 +1,89 @@
+name: Run Tests
+
+on:
+  push:
+    paths:
+      - 'V2/powershell/**'
+      - 'V2/bash/**'
+      - 'V2/tests/**'
+      - '.github/workflows/run-tests.yml'
+  pull_request:
+    paths:
+      - 'V2/powershell/**'
+      - 'V2/bash/**'
+      - 'V2/tests/**'
+      - '.github/workflows/run-tests.yml'
+  workflow_dispatch:
+
+jobs:
+  detect-changes:
+    name: Detect Changes
+    runs-on: ubuntu-latest
+    outputs:
+      powershell: ${{ steps.changes.outputs.powershell }}
+      bash: ${{ steps.changes.outputs.bash }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Detect file changes
+        id: changes
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            powershell:
+              - 'V2/powershell/**'
+              - 'V2/tests/powershell/**'
+              - '.github/workflows/run-tests.yml'
+            bash:
+              - 'V2/bash/**'
+              - 'V2/tests/bash/**'
+              - '.github/workflows/run-tests.yml'
+
+  powershell-tests:
+    name: PowerShell Tests (Pester)
+    runs-on: ubuntu-latest
+    needs: detect-changes
+    if: needs.detect-changes.outputs.powershell == 'true'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run Pester Tests
+        shell: pwsh
+        run: |
+          $config = New-PesterConfiguration
+          $config.Run.Path = "./V2/tests/powershell"
+          $config.Output.Verbosity = "Detailed"
+          $config.TestResult.Enabled = $true
+          $config.TestResult.OutputPath = "pester-results.xml"
+          $config.TestResult.OutputFormat = "NUnitXml"
+          Invoke-Pester -Configuration $config
+
+      - name: Upload Pester Results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: pester-results
+          path: pester-results.xml
+
+  bash-tests:
+    name: Bash Tests (Bats)
+    runs-on: ubuntu-latest
+    needs: detect-changes
+    if: needs.detect-changes.outputs.bash == 'true'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Bats
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y bats
+
+      - name: Run Bats Tests
+        run: bats V2/tests/bash/ --formatter tap > bats-results.tap
+
+      - name: Upload Bats Results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: bats-results
+          path: bats-results.tap
