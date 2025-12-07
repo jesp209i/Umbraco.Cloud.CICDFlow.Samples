@@ -1,0 +1,108 @@
+name: Run Tests
+
+on:
+  push:
+    paths:
+      - 'V2/powershell/**'
+      - 'V2/bash/**'
+      - 'tests/**'
+      - '.github/workflows/run-tests.yml'
+  pull_request:
+    paths:
+      - 'V2/powershell/**'
+      - 'V2/bash/**'
+      - 'tests/**'
+      - '.github/workflows/run-tests.yml'
+  workflow_dispatch:
+    inputs:
+      run_powershell:
+        description: 'Run PowerShell tests'
+        type: boolean
+        default: true
+      run_bash:
+        description: 'Run Bash tests'
+        type: boolean
+        default: true
+
+jobs:
+  detect-changes:
+    name: Detect Changes
+    runs-on: ubuntu-latest
+    outputs:
+      powershell: ${{ steps.set-outputs.outputs.powershell }}
+      bash: ${{ steps.set-outputs.outputs.bash }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Detect file changes
+        id: changes
+        if: github.event_name != 'workflow_dispatch'
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            powershell:
+              - 'V2/powershell/**'
+              - 'tests/powershell-V2/**'
+            bash:
+              - 'V2/bash/**'
+              - 'tests/bash-V2/**'
+
+      - name: Set outputs
+        id: set-outputs
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "powershell=${{ inputs.run_powershell }}" >> $GITHUB_OUTPUT
+            echo "bash=${{ inputs.run_bash }}" >> $GITHUB_OUTPUT
+          else
+            echo "powershell=${{ steps.changes.outputs.powershell }}" >> $GITHUB_OUTPUT
+            echo "bash=${{ steps.changes.outputs.bash }}" >> $GITHUB_OUTPUT
+          fi
+
+  powershell-tests:
+    name: PowerShell Tests (Pester)
+    runs-on: ubuntu-latest
+    needs: detect-changes
+    if: needs.detect-changes.outputs.powershell == 'true'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run Pester Tests
+        shell: pwsh
+        run: |
+          $config = New-PesterConfiguration
+          $config.Run.Path = "./tests/powershell-V2"
+          $config.Output.Verbosity = "Detailed"
+          $config.TestResult.Enabled = $true
+          $config.TestResult.OutputPath = "pester-results.xml"
+          $config.TestResult.OutputFormat = "NUnitXml"
+          Invoke-Pester -Configuration $config
+
+      - name: Upload Pester Results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: pester-results
+          path: pester-results.xml
+
+  bash-tests:
+    name: Bash Tests (Bats)
+    runs-on: ubuntu-latest
+    needs: detect-changes
+    if: needs.detect-changes.outputs.bash == 'true'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Bats
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y bats
+
+      - name: Run Bats Tests
+        run: bats tests/bash-V2/ --verbose-run --show-output-of-passing-tests --timing 2>&1 | tee bats-results.tap
+
+      - name: Upload Bats Results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: bats-results
+          path: bats-results.tap

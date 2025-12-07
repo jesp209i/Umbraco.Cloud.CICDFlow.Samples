@@ -54,7 +54,7 @@ if git apply "$patchFile" --ignore-space-change --ignore-whitespace --check; the
     elif [[ "$pipelineVendor" == "TESTRUN" ]]; then
         echo $pipelineVendor
         
-    else 
+    else
         echo "Please use one of the supported Pipeline Vendors or enhance script to fit your needs"
         echo "Currently supported are: GITHUB and AZUREDEVOPS"
         exit 1
