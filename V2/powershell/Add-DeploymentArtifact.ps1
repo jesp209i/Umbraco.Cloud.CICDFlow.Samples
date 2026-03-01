@@ -117,6 +117,8 @@ try {
 catch 
 {
     Write-Host "---Error---"
+    Write-Host "Operation: Upload Artifact"
+    Write-Host "Endpoint: $url"
     Write-Host $_.Exception.Message
     if ($null -ne $_.Exception.Response) {
         $responseStream = $_.Exception.Response.GetResponseStream()

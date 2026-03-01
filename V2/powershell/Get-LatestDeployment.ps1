@@ -94,6 +94,8 @@ try{
 }
 catch {
   Write-Host "---Error---"
+  Write-Host "Operation: Get Deployments"
+  Write-Host "Endpoint: $url"
   Write-Host "Exception Message: $($_.Exception.Message)"
   
   if ($_.ErrorDetails) {

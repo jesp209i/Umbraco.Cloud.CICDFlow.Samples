@@ -39,14 +39,14 @@ $Headers = @{
   'Content-Type' = 'application/json'
 }
 
-if ($GetDiffDeploymentId -eq '') {
+if ($DeploymentId -eq '') {
     Write-Host "I need a DeploymentId of an older deployment to download a git-patch"
     Exit 1;
 }
 
 # ensure folder exists
 if (!(Test-Path $DownloadFolder -PathType Container)) { 
-  Write-Host "Creting folder $($DownloadFolder)"
+  Write-Host "Creating folder $($DownloadFolder)"
   New-Item -ItemType Directory -Force -Path $DownloadFolder
 }
 
@@ -93,6 +93,8 @@ try {
 }
 catch {
   Write-Host "---Error---"
+  Write-Host "Operation: Get Deployment diff"
+  Write-Host "Endpoint: $url"
   Write-Host "Exception Message: $($_.Exception.Message)"
   
   if ($_.ErrorDetails) {
