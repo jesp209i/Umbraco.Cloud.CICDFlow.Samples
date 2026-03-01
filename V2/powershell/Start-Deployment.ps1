@@ -85,15 +85,11 @@ try {
     Write-Host "--- --- ---"
     Write-Host "Deployment Created Successfully => $($deploymentId)"
     exit 0
-
-    Write-Host "---Response Start---"
-    Write-Host $response
-    Write-Host "---Response End---"
-    Write-Host "Unexpected response - see above"
-    exit 1
 }
 catch {
     Write-Host "---Error---"
+    Write-Host "Operation: Start the deployment"
+    Write-Host "Endpoint: $url"
     Write-Host $_.Exception.Message
 
     if ($_.Exception.Response -is [System.Net.HttpWebResponse]) {

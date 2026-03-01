@@ -52,6 +52,8 @@ function Request-Deployment-Status ([INT]$run){
     catch 
     {
         Write-Host "---Error---"
+        Write-Host "Operation: Get Deployment status"
+        Write-Host "Endpoint: $url"
         Write-Host $_.Exception.Message
         if ($null -ne $_.Exception.Response) {
             $responseStream = $_.Exception.Response.GetResponseStream()
@@ -106,6 +108,6 @@ if ($deploymentResponse.deploymentState -eq 'Failed'){
 }
 
 # Unexpected deployment status - considered a fail
-Write-Host "Unexpected status: $deploymentResponse.deploymentState"
+Write-Host "Unexpected status: $($deploymentResponse.deploymentState)"
 exit 1
 
